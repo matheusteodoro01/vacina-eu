@@ -10,19 +10,30 @@ import api from '../../services/api';
 
 export default function Logon() {
     const history = useHistory();
-    const [id, setId] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+
+
+
     async function handleLogin(e) {
         e.preventDefault();
 
-        try {
-            const response = await api.post('sessions', { id });
-            localStorage.setItem('ongId', id);
-            localStorage.setItem('ongName', response.data.name);
-            history.push('/profile')
-        } catch (err) {
-            alert('Falha no login, tente novamente', err)
+        const data= {
+            email,
+            senha
         }
+        await api.post('login',data)
+
+        .then((response)=>{
+            localStorage.setItem("Email",email)
+            localStorage.setItem("Authorization",response.headers.authorization)
+            history.push('/profile')
+
+        })
+        .catch(erro=>{
+            console.log(erro)
+        })
+
 
     }
     return (
@@ -38,14 +49,14 @@ export default function Logon() {
                         Este é o canal de atendimento para agendar sua vacina de forma simples facil!
                         <h1>Faça seu logon</h1>
                         <input placeholder="Email ou CPF"
-                            value={id}
-                            onChange={e => setId(e.target.value)}
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
                         
                         <input placeholder="Senha"
                             type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            value={senha}
+                            onChange={e => setSenha(e.target.value)}
                         />
                         <button className="button" type="submit">Entrar</button>
                         <Link to="/register" className="back-link">

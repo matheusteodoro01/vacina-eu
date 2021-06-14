@@ -7,19 +7,21 @@ import api from '../../services/api';
 
 export default function Profile() {
     const ongName = localStorage.getItem('ongName');
-    const ongId = localStorage.getItem('ongId');
+    const token = localStorage.getItem('Authorization');
     const [incidents, setIncidents] = useState([]);
     const history = useHistory();
     useEffect(() => {
 
-        api.get('profile', {
-            headers: {
-                Authorization: ongId,
+        api.get('agendamentos', {
+             headers: {
+               Authorization: token,
             }
         }).then(response => {
+            
             setIncidents(response.data);
+          
         })
-    }, [ongId]);
+    }, [token]);
 
 
     async function handleDeleteIncident(id) {
@@ -27,7 +29,7 @@ export default function Profile() {
         try {
             await api.delete(`incidents/${id}`, {
                 headers: {
-                    Authorization: ongId,
+                    Authorization: token,
                 }
             });
             setIncidents(incidents.filter(incident => incident.id !== id))
@@ -56,22 +58,24 @@ export default function Profile() {
                 </button>
             </header>
 
-            <h1>Casos Cadastrados</h1>
+            <h1>Vacinas Agendadas</h1>
 
             <ul>
-                {incidents.map(incident => (
+                { incidents.map(incident => (
                     <li key={incident.id}>
-                        <strong>CASO:</strong>
-                        <p>{incident.title}</p>
-                        <strong>DESCRIÇÃO</strong>
-                        <p>{incident.description}</p>
+                        <strong>Agendamento N° {incident.id}</strong>
+                        <p>{incident.data}</p>
+                        <strong>Nome</strong>
+                        <p>{incident.usuario.nome} {incident.usuario.sobrenome}</p>
+                        <strong>Undiade de Atendimento</strong>
+                        <p>{incident.unidadeAtendimento.nome}</p>
                         <strong>VALOR:</strong>
-                        <p>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(incident.value)}</p>
+                        <p>{}</p>
                         <button type="button" onClick={() => handleDeleteIncident(incident.id)}>
                             <FiTrash2 size={20} color="a8a8b3" />
                         </button>
                     </li>
-                ))}
+                ))} 
             </ul>
 
 

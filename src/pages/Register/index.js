@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './styles.css';
 import { useHistory } from 'react-router-dom'
@@ -6,72 +6,78 @@ import logoImg from '../../assets/logo.svg'
 import api from '../../services/api';
 
 export default function Register() {
-    const [name, setName] = useState('');
+    const [nome, setNome] = useState('');
+    const [sobrenome, setSobrenome] = useState('');
     const [email, setEmail] = useState('');
     const [cpf, setCpf] = useState('');
-    const [password, setPassword] = useState('');
-    const [birthDate, setBirthDate] = useState('');
-    const [phone, setPhone] = useState('');
+    const [senha, setSenha] = useState('');
+    const [dataDeNascimento, setDataDeNasciemnto] = useState('');
+    const [telefone, setTelefone] = useState('');
     const [sus, setSus] = useState('');
-    const [road, setRoad] = useState('');
-    const [number, setNumber] = useState('');
-    const [district, setDistrict] = useState('');
-    const [city, setCity] = useState('');
+    const [logadouro, setLogadouro] = useState('');
+    const [numero, setNumero] = useState('');
+    const [bairro, setBairro] = useState('');
+    const [cidade, setCidade] = useState('');
     const [cep, setCep] = useState('');
     const [uf, setUf] = useState('');
 
-        const history = useHistory();
+    const history = useHistory();
 
     async function handleRegister(e) {
         e.preventDefault();
-        const data= {
-            name,
+        const data = {
+            nome,
+            sobrenome,
             email,
             cpf,
-            password,
-            birthDate,
-            phone,
+            senha,
+            dataDeNascimento,
+            telefone,
             sus,
-            road,
-            number,
-            district,
-            city,
+            logadouro,
+            numero,
+            bairro,
+            cidade,
             cep,
             uf
         }
 
-        try {
-        const response = await api.post('ongs',data)
-        alert(`Seu ID de acesso: ${response.data.id}`)
-        history.push('/')
-    } catch(err) {
-        alert('Erro no cadastro tente novamente!')
-    }
+        await api.post('usuarios', data)
+            .then(response => {
+                alert('Cadastrado com Sucesso!')
+            })
+
+            .catch(response => {
+                alert('Erro ao cadastrar!')
+            }
+            )
+     //   history.push('/')
+
 
     }
 
     useEffect(() => {
 
         axios.get(`https://viacep.com.br/ws/${cep}/json/`)
-        
-        .then(response => {
-          console.log(response)
-          setRoad(response.data.logradouro)
-          setCity(response.data.localidade)
-          setDistrict(response.data.bairro)
-          setUf(response.data.uf)
-        })
-        
-        .catch((response)=>{
 
-        })
+            .then(response => {
+                console.log(response)
+                setLogadouro(response.data.logradouro)
+                setCidade(response.data.localidade)
+                setBairro(response.data.bairro)
+                setUf(response.data.uf)
+            })
+
+            .catch((response) => {
+
+            })
     }, [cep]);
 
-  
-   function _onFocus(e) {
+
+    function _onFocus(e) {
         e.currentTarget.type = "date";
     }
-    function _onBlur(e){
+    function _onBlur(e) {
         e.currentTarget.type = "text";
         e.currentTarget.placeholder = "Data de Nascimento";
     }
@@ -85,82 +91,99 @@ export default function Register() {
                     <img src={logoImg} alt="Be The Hero" />
                     <h1>Cadastro</h1>
                     <p>Faça seu cadastro, entre na plataforma e agende sua vacinação em uma unidade atendimento mais próxima.</p>
-              
+
                 </section>
 
                 <form onSubmit={handleRegister}>
 
-                    <input placeholder="Nome Completo" 
-                    value={name}
-                    onChange = {e => setName(e.target.value)}
+                    <input placeholder="Nome"
+                        value={nome}
+                        required
+                        onChange={e => setNome(e.target.value)}
                     />
-                    
+                     <input placeholder="Sobrenome"
+                        value={sobrenome}
+                        required
+                        onChange={e => setSobrenome(e.target.value)}
+                    />
+
                     <input type="email" placeholder="E-mail"
-                     value={email}
-                     onChange = {e => setEmail(e.target.value)}
-                     />
-                     
-                     <input type="number" placeholder="CPF"
-                     value={cpf}
-                     onChange = {e => setCpf(e.target.value)}
-                     />
-                     <input type="password" placeholder="Senha" 
-                    value={password}
-                    onChange = {e => setPassword(e.target.value)}
+                        required
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
                     />
-                     
+
+                    <input type="number" placeholder="CPF"
+                        required
+                        value={cpf}
+                        onChange={e => setCpf(e.target.value)}
+                    />
+                    <input type="password" placeholder="Senha"
+                        required
+                        value={senha}
+                        onChange={e => setSenha(e.target.value)}
+                    />
+
                     <input type="text" placeholder="Data de Nascimento"
-                    value={birthDate}
-                    onChange = {e => setBirthDate(e.target.value)}
+                        required
+                        value={dataDeNascimento}
+                        onChange={e => setDataDeNasciemnto(e.target.value)}
 
 
-                    onFocus = {_onFocus} onBlur={_onBlur}/>
-                    
-                    <input type="number" placeholder="Telefone" 
-                    value={phone}
-                    onChange = {e => setPhone(e.target.value)}
-                     />
-                    <input type="number" placeholder="N° Cartão SUS" 
-                    value={sus}
-                    onChange = {e => setSus(e.target.value)}
-                     />
+                        onFocus={_onFocus} onBlur={_onBlur} />
+
+                    <input type="number" placeholder="Telefone"
+                        required
+                        value={telefone}
+                        onChange={e => setTelefone(e.target.value)}
+                    />
+                    <input type="number" placeholder="N° Cartão SUS"
+                        required
+                        value={sus}
+                        onChange={e => setSus(e.target.value)}
+                    />
                     <div className="input-group">
-                        <input placeholder="Rua" 
-                        value={road}
-                        onChange = {e => setRoad(e.target.value)}
-                         />
-                        <input placeholder="Numero" style={{ width: 130 }} 
-                        value={number}
-                        onChange = {e => setNumber(e.target.value)}
+                        <input placeholder="Rua"
+                            required
+                            value={logadouro}
+                            onChange={e => setLogadouro(e.target.value)}
                         />
-                        
+                        <input placeholder="Numero" style={{ width: 130 }}
+                            required
+                            value={numero}
+                            onChange={e => setNumero(e.target.value)}
+                        />
+
                     </div>
 
 
                     <div className="input-group">
-                    <input placeholder="Bairro" style={{ width: 220 }} 
-                        value={district}
-                        onChange = {e => setDistrict(e.target.value)}
-                         />
-                     
-                        <input placeholder="Cidade" 
-                        value={city}
-                        onChange = {e => setCity(e.target.value)}
+                        <input placeholder="Bairro" style={{ width: 220 }}
+                            required
+                            value={bairro}
+                            onChange={e => setBairro(e.target.value)}
                         />
-                        </div>
+
+                        <input placeholder="Cidade"
+                            value={cidade}
+                            onChange={e => setCidade(e.target.value)}
+                        />
+                    </div>
 
                     <div className="input-group">
-                    <input placeholder="CEP" 
-                        value={cep}
-                        onChange = {e => setCep(e.target.value)}
+                        <input placeholder="CEP"
+                            required
+                            value={cep}
+                            onChange={e => setCep(e.target.value)}
                         />
-                       
-                     
-                        <input placeholder="UF" style={{ width: 80 }} 
-                        value={uf}
-                        onChange = {e => setUf(e.target.value)}
+
+
+                        <input placeholder="UF" style={{ width: 80 }}
+                            required
+                            value={uf}
+                            onChange={e => setUf(e.target.value)}
                         />
-                        
+
                     </div>
 
 
@@ -169,7 +192,7 @@ export default function Register() {
                 </form>
             </div>
         </div>
-        
+
 
 
     )

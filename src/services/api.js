@@ -2,7 +2,27 @@ import axios from 'axios';
 
 const api = axios.create({
 
-    baseURL: 'http://localhost:3333'
+    baseURL: 'https://senai-vacina.herokuapp.com/'
 })
+
+
+
+//   api.interceptors.request.use(
+//     async config => {
+//       const keys = JSON.parse("Authorization")
+//       const token = localStorage.getItem("Authorization")
+//       config.headers = { 
+//         'Authorization': `Bearer ${token}`,
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//       }
+//       return config;
+//     },
+//     error => {
+//       Promise.reject(error)
+//     }
+//   )
+
+
 
 export default api;
