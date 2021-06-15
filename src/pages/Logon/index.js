@@ -74,7 +74,7 @@ export default function Logon() {
                         Bem-vindo ao Vacina Eu
                         Este é o canal de atendimento para agendar sua vacina de forma simples facil!
                         <h1>Faça seu logon</h1>
-                        <input placeholder="Email ou CPF"
+                        <input placeholder="Email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />
