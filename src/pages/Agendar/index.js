@@ -15,6 +15,9 @@ export default function Agendar() {
     const [unidadeAtendimento, setUnidadeAtendimento] = useState('');
     const history = useHistory();
     const token = localStorage.getItem('Authorization')
+    if(!token){
+        history.push('/')
+    }
     useEffect(() => {
 
         

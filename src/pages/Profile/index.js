@@ -10,36 +10,24 @@ export default function Profile() {
     const token = localStorage.getItem('Authorization');
     const [incidents, setIncidents] = useState([]);
     const history = useHistory();
+    if(!token){
+        history.push('/')
+    }
+
     useEffect(() => {
 
         api.get('agendamentos', {
              headers: {
                Authorization: token,
             }
-        }).then(response => {
-            
+        }).then(response => {         
             setIncidents(response.data);
-            console.log(response.data[0].finalizado)
           
         })
     }, [token]);
 
-
-    async function handleDeleteIncident(id) {
-
-        try {
-            await api.delete(`incidents/${id}`, {
-                headers: {
-                    Authorization: token,
-                }
-            });
-            setIncidents(incidents.filter(incident => incident.id !== id))
-
-        } catch (error) {
-            alert('Erro ao deletar caso, tente novamente!')
-        }
-
-    }
+   
+   
     function handleLogout() {
         localStorage.clear();
         history.push('/')
@@ -72,9 +60,7 @@ export default function Profile() {
                         <p>{incident.unidadeAtendimento.nome}</p>
                         <strong>Status</strong>
                         <p>{incident.finalizado}</p>
-                        <button type="button" onClick={() => handleDeleteIncident(incident.id)}>
-                            <FiTrash2 size={20} color="a8a8b3" />
-                        </button>
+                        
                     </li>
                 ))} 
             </ul>
