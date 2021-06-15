@@ -6,38 +6,78 @@ import heroesImg from '../../assets/heroes.png'
 import logoImg from '../../assets/logo.svg'
 import api from '../../services/api';
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Logon() {
     const history = useHistory();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-
-
+    const token = localStorage.getItem('Authorization');
 
     async function handleLogin(e) {
         e.preventDefault();
 
-        const data= {
+
+
+        
+        const data = {
             email,
             senha
         }
-        await api.post('login',data)
+      
+        
+        function  errorNotification(message) {
+            toast.error(message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        await api.post('login', data)
 
-        .then((response)=>{
-            localStorage.setItem("Email",email)
-            localStorage.setItem("Authorization",response.headers.authorization)
-            history.push('/profile')
+            .then((response) => {
+                localStorage.setItem("Email", email)
+                localStorage.setItem("Authorization", response.headers.authorization)
 
-        })
-        .catch(erro=>{
-            console.log(erro)
-        })
+
+
+                api.defaults.headers['Authorization'] = `${token}`
+
+                history.push('/profile')
+             
+
+            })
+            .catch(erro => {
+             
+                errorNotification("Usuario ou senha inválidos!")
+            })
+
+         
 
 
     }
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+            {/* Same as */}
+            <ToastContainer />
 
             <div className="logon-container">
                 <section className="form">
@@ -52,7 +92,7 @@ export default function Logon() {
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />
-                        
+
                         <input placeholder="Senha"
                             type="password"
                             value={senha}

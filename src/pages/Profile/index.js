@@ -19,6 +19,7 @@ export default function Profile() {
         }).then(response => {
             
             setIncidents(response.data);
+            console.log(response.data[0].finalizado)
           
         })
     }, [token]);
@@ -51,26 +52,26 @@ export default function Profile() {
                 <img src={logoImg} alt="Be The Hero" />
                 <span>Bem vindo, {ongName}</span>
 
-                <Link className="button" to="/incidents/new">Cadastrar novo caso</Link>
+                <Link className="button" to="/agendar">Agendar Nova Vacina</Link>
                 <button type="button" onClick={handleLogout}>
                     <FiPower size={18} color="#E02041" />
 
                 </button>
             </header>
 
-            <h1>Vacinas Agendadas</h1>
+            <h1>Sua Carteira de Vacina</h1>
 
             <ul>
                 { incidents.map(incident => (
                     <li key={incident.id}>
-                        <strong>Agendamento N° {incident.id}</strong>
+                        <strong>Vacina</strong>
+                        <p>{incident.observações}</p>
+                        <strong>Data</strong>
                         <p>{incident.data}</p>
-                        <strong>Nome</strong>
-                        <p>{incident.usuario.nome} {incident.usuario.sobrenome}</p>
-                        <strong>Undiade de Atendimento</strong>
+                        <strong>Unidade de Atendimento</strong>
                         <p>{incident.unidadeAtendimento.nome}</p>
-                        <strong>VALOR:</strong>
-                        <p>{}</p>
+                        <strong>Status</strong>
+                        <p>{incident.finalizado}</p>
                         <button type="button" onClick={() => handleDeleteIncident(incident.id)}>
                             <FiTrash2 size={20} color="a8a8b3" />
                         </button>
