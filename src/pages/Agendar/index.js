@@ -55,8 +55,9 @@ export default function Agendar() {
 
             })
 
-            .catch(response => {
-                errorNotification('Não foi possivel concluir o agendamento')
+            .catch(err => {
+                errorNotification(err.response.data.message)
+      
 
             }
             )

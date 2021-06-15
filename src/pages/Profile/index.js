@@ -78,7 +78,7 @@ export default function Profile() {
                         <strong>Data</strong>
                         <p>{convertDate(incident.data)}</p>
                         <strong>Unidade de Atendimento</strong>
-                        <p>{unidadesAtendimento[0].nome}</p>
+                        <p>UPA Luiz de Sá</p>
                         <strong>Status</strong>
                         <p>Agendado</p>
 
