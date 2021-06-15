@@ -9,37 +9,46 @@ export default function Profile() {
     const ongName = localStorage.getItem('ongName');
     const [incidents, setIncidents] = useState([]);
     const [usuario, setUsuario] = useState('');
+    const [unidadesAtendimento, setUnidadesAtendimento] = useState([]);
     const token = localStorage.getItem('Authorization')
     const email = localStorage.getItem('Email')
     const history = useHistory();
-    if(!token){
+    if (!token) {
         history.push('/')
     }
 
     function convertDate(inputFormat) {
         function pad(s) { return (s < 10) ? '0' + s : s; }
         var d = new Date(inputFormat)
-        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
-      }
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+    }
 
-  useEffect(async () => {
+    useEffect(async () => {
 
-    await api.get(`usuarios/findByEmail?email=${email}`, {
-    }).then(response => {
-        setUsuario(response.data)
-
-    })
-     await api.get('agendamentos', {
-        }).then(response => {         
-            setIncidents(response.data);
-          
+        await api.get(`usuarios/findByEmail?email=${email}`, {
         })
-   
+            .then(async response => {
+                console.log(response)
+                setUsuario(response.data)
+                listarAgendamentos(response.data.id)
+            })
+            
     }, [token]);
 
-  
-   
-   
+    function listarAgendamentos(id) {
+        api.get(`agendamentos/usuario?id=${id}`, {
+        }).then(response => {
+            setIncidents(response.data);
+        })
+        api.get(`unidade_atendimento`, {
+        }).then(response => {
+            console.log(response.data)
+            setUnidadesAtendimento(response.data)
+
+        })
+    }
+
+
     function handleLogout() {
         localStorage.clear();
         history.push('/')
@@ -62,19 +71,19 @@ export default function Profile() {
             <h1>Sua Carteira de Vacina</h1>
 
             <ul>
-                { incidents.map(incident => (
+                {incidents.map(incident => (
                     <li key={incident.id}>
                         <strong>Vacina</strong>
                         <p>{incident.observações}</p>
                         <strong>Data</strong>
                         <p>{convertDate(incident.data)}</p>
                         <strong>Unidade de Atendimento</strong>
-                        <p>{incident.unidadeAtendimento.nome}</p>
+                        <p>{unidadesAtendimento[0].nome}</p>
                         <strong>Status</strong>
                         <p>Agendado</p>
-                        
+
                     </li>
-                ))} 
+                ))}
             </ul>
 
 

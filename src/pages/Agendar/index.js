@@ -12,6 +12,7 @@ export default function Agendar() {
     const [usuario, setUsuario] = useState('');
     const [observações, setObservacoes] = useState('');
     const [unidadeAtendimento, setUnidadeAtendimento] = useState('');
+    const [unidadesAtendimento, setUnidadesAtendimento] = useState([]);
     const history = useHistory();
     const token = localStorage.getItem('Authorization')
     const email = localStorage.getItem('Email')
@@ -28,6 +29,11 @@ export default function Agendar() {
             setUsuario(response.data.id)
 
         })
+        api.get(`unidade_atendimento`, {
+        }).then(response => {
+            setUnidadesAtendimento(response.data)
+
+        })
     }, [token]);
     async function handleRegister(e) {
         e.preventDefault();
@@ -37,22 +43,23 @@ export default function Agendar() {
             data,
             usuario,
             observações,
-            unidadeAtendimento,
+            unidadeAtendimento: 1,
 
 
         }
-
+       
         await api.post('agendamentos', dados)
             .then(response => {
-                successNotification('Cadastrado com Sucesso!')
+                successNotification('Agendamento realizado com sucesso!')
+                history.push('/profile')
+
             })
 
             .catch(response => {
-                console.log(response)
-                
+                errorNotification('Não foi possivel concluir o agendamento')
+
             }
             )
-        //   history.push('/')
 
 
 
@@ -81,20 +88,6 @@ export default function Agendar() {
             });
         }
 
-    }
-
-    useEffect(() => {
-
-
-    }, [token]);
-
-
-    function _onFocus(e) {
-        e.currentTarget.type = "date";
-    }
-    function _onBlur(e) {
-        e.currentTarget.type = "text";
-        e.currentTarget.placeholder = "Data de Nascimento";
     }
 
     return (
@@ -132,27 +125,28 @@ export default function Agendar() {
                             onChange={e => setObservacoes(e.target.value)} />
 
                         <datalist id="data">
-                            {/* {vaccines.map((item, key) =>
-                            <option key={key} value={item.displayValue} />
-
-
-                        )} */}
-                            <option value="Chrome" />
+        
+                            <option value="Febre amarela" />
+                            <option value="Gripe" />
+                            <option value="Hepatites A e B" />
+                            <option value="HPV" />
+                            <option value="Tríplice bacteriana" />
+                            <option value="Covid-19" />
                         </datalist>
-                        <input type="text"
-                            value={unidadeAtendimento}
-                            placeholder="Unidade de Atendimento"
-                            list="data"
-                            onChange={e => setUnidadeAtendimento(e.target.value)} />
-
-                        <datalist id="data">
-                            {/* {vaccines.map((item, key) =>
-                            <option key={key} value={item.displayValue} />
+                       
 
 
-                        )} */}
-                            <option value="Chrome" />
-                        </datalist>
+                        <select
+                        value={unidadeAtendimento}
+                        
+                        
+                         >
+                            {unidadesAtendimento.map(unidade =>
+                            
+                                <option key={unidade.id} value={unidade.id} >{unidade.nome}</option>
+                            )}
+                           
+                        </select>
 
 
                         <input type="date" placeholder="Data de Vacinação"

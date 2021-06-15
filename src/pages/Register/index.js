@@ -29,30 +29,34 @@ export default function Register() {
     async function handleRegister(e) {
         e.preventDefault();
         const data = {
-            nome,
-            sobrenome,
-            email,
-            cpf,
-            senha,
-            dataDeNascimento,
-            telefone,
-            sus,
-            logadouro,
-            numero,
-            bairro,
-            cidade,
-            cep,
-            uf
+            nome: nome,
+            sobrenome: sobrenome,
+            email: email,
+            cpf: cpf,
+            senha: senha,
+            dataDeNascimento: dataDeNascimento,
+            telefone: telefone,
+            endereco: {
+                logadouro: logadouro,
+                numero: numero,
+                bairro: bairro,
+                cep: cep,
+                cidade: {
+                    nome: cidade,
+                },
+            },
+
         }
 
         await api.post('usuarios', data)
             .then(response => {
                 successNotification('Cadastrado com Sucesso!')
+                history.push('/')
             })
 
-            .catch(response => {
-                errorNotification("Erro ao agendar vacina!",response.message)
-            }
+            .catch(err => {
+                errorNotification(err.response.data.message)
+              }
             )
 
         function successNotification(message) {

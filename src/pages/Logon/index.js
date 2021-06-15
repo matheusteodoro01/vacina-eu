@@ -19,15 +19,11 @@ export default function Logon() {
 
     async function handleLogin(e) {
         e.preventDefault();
-
-
-
-        
+       
         const data = {
             email,
             senha
-        }
-      
+        } 
         
         function  errorNotification(message) {
             toast.error(message, {
@@ -46,18 +42,11 @@ export default function Logon() {
                 localStorage.setItem("Email", email)
                 localStorage.setItem("Authorization", response.headers.authorization)
                 api.defaults.headers['Authorization'] = `${response.headers.authorization}`
-
-                history.push('/profile')
-             
-
+                history.push('/profile')  
             })
-            .catch(erro => {
-             
+            .catch(erro => { 
                 errorNotification("Usuario ou senha inválidos!")
-            })
-
-         
-
+            })      
 
     }
     return (
