@@ -7,25 +7,37 @@ import api from '../../services/api';
 
 export default function Profile() {
     const ongName = localStorage.getItem('ongName');
-    const token = localStorage.getItem('Authorization');
     const [incidents, setIncidents] = useState([]);
+    const [usuario, setUsuario] = useState('');
+    const token = localStorage.getItem('Authorization')
+    const email = localStorage.getItem('Email')
     const history = useHistory();
     if(!token){
         history.push('/')
     }
 
-    useEffect(() => {
+    function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+      }
 
-        api.get('agendamentos', {
-             headers: {
-               Authorization: token,
-            }
+  useEffect(async () => {
+
+    await api.get(`usuarios/findByEmail?email=${email}`, {
+    }).then(response => {
+        setUsuario(response.data)
+
+    })
+     await api.get('agendamentos', {
         }).then(response => {         
             setIncidents(response.data);
           
         })
+   
     }, [token]);
 
+  
    
    
     function handleLogout() {
@@ -38,7 +50,7 @@ export default function Profile() {
         <div className="profile-container">
             <header>
                 <img src={logoImg} alt="Be The Hero" />
-                <span>Bem vindo, {ongName}</span>
+                <span>Bem vindo, {usuario.nome}</span>
 
                 <Link className="button" to="/agendar">Agendar Nova Vacina</Link>
                 <button type="button" onClick={handleLogout}>
@@ -55,11 +67,11 @@ export default function Profile() {
                         <strong>Vacina</strong>
                         <p>{incident.observações}</p>
                         <strong>Data</strong>
-                        <p>{incident.data}</p>
+                        <p>{convertDate(incident.data)}</p>
                         <strong>Unidade de Atendimento</strong>
                         <p>{incident.unidadeAtendimento.nome}</p>
                         <strong>Status</strong>
-                        <p>{incident.finalizado}</p>
+                        <p>Agendado</p>
                         
                     </li>
                 ))} 

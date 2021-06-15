@@ -45,10 +45,7 @@ export default function Logon() {
             .then((response) => {
                 localStorage.setItem("Email", email)
                 localStorage.setItem("Authorization", response.headers.authorization)
-
-
-
-                api.defaults.headers['Authorization'] = `${token}`
+                api.defaults.headers['Authorization'] = `${response.headers.authorization}`
 
                 history.push('/profile')
              

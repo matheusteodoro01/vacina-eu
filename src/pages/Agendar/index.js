@@ -10,32 +10,31 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Agendar() {
     const [data, setData] = useState('');
     const [usuario, setUsuario] = useState('');
-    const [finalizado, setFinalizado] = useState('');
     const [observações, setObservacoes] = useState('');
     const [unidadeAtendimento, setUnidadeAtendimento] = useState('');
     const history = useHistory();
     const token = localStorage.getItem('Authorization')
-    if(!token){
+    const email = localStorage.getItem('Email')
+
+
+    if (!token) {
         history.push('/')
     }
     useEffect(() => {
 
-        
-        api.get(`usuario`, {
-            headers: {
-                Authorization: token,
-            }
-        }).then(response => {
 
+        api.get(`usuarios/findByEmail?email=${email}`, {
+        }).then(response => {
+            setUsuario(response.data.id)
 
         })
     }, [token]);
     async function handleRegister(e) {
         e.preventDefault();
+
         const dados = {
 
             data,
-            finalizado,
             usuario,
             observações,
             unidadeAtendimento,
@@ -43,21 +42,20 @@ export default function Agendar() {
 
         }
 
-        await api.post('agendamentos',{
-            header: {
-                Authorization: token,
-            }
-        },dados)
+        await api.post('agendamentos', dados)
             .then(response => {
                 successNotification('Cadastrado com Sucesso!')
             })
 
             .catch(response => {
                 console.log(response)
-                errorNotification("Erro ao agendar vacina!",response)
+                
             }
             )
         //   history.push('/')
+
+
+
 
         function successNotification(message) {
             toast.success(message, {
@@ -157,11 +155,11 @@ export default function Agendar() {
                         </datalist>
 
 
-                        <input type="text" placeholder="Data de Vacinação"
+                        <input type="date" placeholder="Data de Vacinação"
                             required
                             value={data}
                             onChange={e => setData(e.target.value)}
-                            onFocus={_onFocus} onBlur={_onBlur} />
+                        />
 
 
 
